@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 
+import { ErrorRespose } from "./@types/api";
 import { apiRouter } from "./routers/api";
 import { ResponseError } from "./errors";
 
@@ -12,7 +13,7 @@ app.use(
   (
     error: Error,
     req: Request,
-    res: Response<{ error: string }>,
+    res: Response<ErrorRespose>,
     next: NextFunction
   ) => {
     if (error instanceof ResponseError) {

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { FaceFragment } from "../../../@types/api";
+import { DataResponse, FaceFragment } from "../../../@types/api";
 import {
   LimitNegativeError,
   NextTokenNegativeError,
@@ -9,7 +9,10 @@ import { useFacelistDatabase } from "../../../services/facelistDatabase";
 
 export const apiFacesRouter = Router();
 
-type listFacesRes = { items: FaceFragment[]; nextToken: number | null };
+type listFacesRes = DataResponse<{
+  items: FaceFragment[];
+  nextToken: number | null;
+}>;
 type listFacesQs = { limit?: string; nextToken?: string };
 
 apiFacesRouter.get<{}, listFacesRes, undefined, listFacesQs>(
@@ -37,6 +40,6 @@ apiFacesRouter.get<{}, listFacesRes, undefined, listFacesQs>(
       nextToken = null;
     }
 
-    res.json({ items, nextToken });
+    res.json({ data: { items, nextToken } });
   }
 );
