@@ -1,21 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { Provider } from "react-redux";
+import { StatusBar } from "expo-status-bar";
 
-export default function App() {
+import config from "./src/api-secrets";
+import { ApiProvider } from "./src/services/api";
+import { appStateStore } from "./src/stores/appStateStore";
+
+import { FacelistScreen } from "./src/screens/FacelistScreen";
+
+const App: React.FC = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ApiProvider config={config}>
+      <Provider store={appStateStore}>
+        <FacelistScreen />
+        <StatusBar style="auto" />
+      </Provider>
+    </ApiProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
