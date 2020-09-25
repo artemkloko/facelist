@@ -25,9 +25,10 @@ export const useListFacesQuery = () => {
 
       if (result.error) {
         throw new Error(result.error);
+      } else if (result.data) {
+        dispatch(setFaces({ data: result.data, variables }));
       }
 
-      result.data && dispatch(setFaces({ data: result.data, variables }));
       setLoading(false);
     },
     [setLoading, apiQuery, dispatch, setFaces]
@@ -51,9 +52,10 @@ export const useListFacesQuery = () => {
 
     if (result.error) {
       throw new Error(result.error);
+    } else if (result.data) {
+      dispatch(appendFaces({ data: result.data, variables }));
     }
 
-    result.data && dispatch(appendFaces({ data: result.data, variables }));
     setLoading(false);
   }, [facesStore, setLoading, apiQuery]);
 

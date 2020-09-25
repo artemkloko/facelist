@@ -52,6 +52,28 @@ describe("useListFacesQuery.execute", () => {
     ];
     expect(store.getActions()).toEqual(expectedActions);
   });
+
+  it("should throw when receives backend error", async () => {
+    // mocks
+    fetchMock.getOnce("/faces/list", {
+      body: { error: "error" },
+      headers: { "content-type": "application/json" },
+    });
+
+    // context
+    const [store, wrapper] = useProviders({ facesApiResults: {} });
+
+    // action
+    const { result } = renderHook(() => useListFacesQuery(), { wrapper });
+
+    // expectations
+    try {
+      await act(() => result.current.execute());
+      fail();
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+    }
+  });
 });
 
 describe("useListFacesQuery.refetch", () => {
@@ -123,6 +145,30 @@ describe("useListFacesQuery.fetchMore", () => {
 
     // expectations
     expect(fetchMock.calls.length).toEqual(0);
+  });
+
+  it("should throw when receives backend error", async () => {
+    // mocks
+    fetchMock.getOnce("/faces/list?limit=10&nextToken=3", {
+      body: { error: "error" },
+      headers: { "content-type": "application/json" },
+    });
+
+    // context
+    const [store, wrapper] = useProviders({
+      facesApiResults: { data: { nextToken: "3" }, variables: { limit: 10 } },
+    });
+
+    // action
+    const { result } = renderHook(() => useListFacesQuery(), { wrapper });
+
+    // expectations
+    try {
+      await act(() => result.current.fetchMore());
+      fail();
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+    }
   });
 });
 
