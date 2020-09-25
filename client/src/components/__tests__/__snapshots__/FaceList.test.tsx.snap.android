@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FaceList should render a FlatList 1`] = `
+<FlatList
+  data={
+    Array [
+      Object {
+        "avatar": "aAvatar",
+        "id": "a",
+        "name": "aName",
+      },
+      Object {
+        "avatar": "bAvatar",
+        "id": "b",
+        "name": "bName",
+      },
+    ]
+  }
+  disableVirtualization={false}
+  horizontal={false}
+  initialNumToRender={10}
+  keyExtractor={[Function]}
+  maxToRenderPerBatch={10}
+  numColumns={1}
+  onEndReached={[Function]}
+  onEndReachedThreshold={2}
+  onRefresh={[Function]}
+  refreshing={false}
+  removeClippedSubviews={true}
+  renderItem={[Function]}
+  scrollEventThrottle={50}
+  updateCellsBatchingPeriod={50}
+  windowSize={21}
+/>
+`;

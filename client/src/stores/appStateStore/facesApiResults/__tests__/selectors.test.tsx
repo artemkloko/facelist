@@ -19,7 +19,6 @@ const useProviders = (storeState: AppRootState) => {
 describe("facesApiResults", () => {
   it("execute without params", async () => {
     // mocks
-
     const a = { id: "a", avatar: "aAvatar", name: "aName" };
     const reducerData = { data: { items: [a] } };
     const [store, wrapper] = useProviders({ facesApiResults: reducerData });

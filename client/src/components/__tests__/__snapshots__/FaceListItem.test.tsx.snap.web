@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FaceListItem should render a ListItem with avatar and name 1`] = `
+<Themed.ListItem
+  bottomDivider={true}
+>
+  <Themed.Avatar
+    source={
+      Object {
+        "uri": "aAvatar",
+      }
+    }
+  />
+  <Themed.ListItemContent>
+    <Themed.ListItemTitle>
+      aName
+    </Themed.ListItemTitle>
+  </Themed.ListItemContent>
+</Themed.ListItem>
+`;
