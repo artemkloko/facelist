@@ -32,7 +32,7 @@ Following are the most important components of this app. Please read through bef
 [`ApiProvider`]: src/services/api.tsx
 [`useApiContext`]: src/services/api.tsx
 [`useApiQuery`]: src/services/api.tsx
-[`appStateStore`]: src/stores/index.ts
-[`facesApiResults`]: src/stores/index.ts
-[`facesApiResultsReducer`]: src/stores/facesApiResults/reducer.ts
+[`appStateStore`]: src/stores/appStateStore/index.ts
+[`facesApiResults`]: src/stores/appStateStore/index.ts
+[`facesApiResultsReducer`]: src/stores/appStateStore/facesApiResults/reducer.ts
 [`useListFacesQuery`]: src/hooks/useListFacesQuery.ts
