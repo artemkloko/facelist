@@ -19,11 +19,18 @@ export const facesApiResultsReducer: Reducer<
   FacesApiResultsActions
 > = (state = initialState, action) => {
   if (action.type === FacesApiResultsAction.SET) {
+    /**
+     * Replace the store data
+     */
     return {
       data: action.payload.data,
       variables: action.payload.variables,
     };
   } else if (action.type === FacesApiResultsAction.APPEND) {
+    /**
+     * Create a new `items` array and append both `state.data.items` and 
+     * `action.payload.data.items` to it, if they exits.
+     */
     let items: FaceFragment[] = [];
     if (state.data?.items) {
       items = [...state.data.items];
