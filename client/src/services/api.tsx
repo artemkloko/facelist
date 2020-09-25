@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useCallback, useContext } from "react";
 
 import { Response } from "../@types/api";
 
@@ -56,24 +56,25 @@ export const useApiQuery = <
 ) => {
   const { config } = useApiContext();
 
-  const execute = async (
-    variables?: QueryVariables
-  ): Promise<Response<QueryResult>> => {
-    let params = "";
-    if (variables && Object.keys(variables).length > 0) {
-      const possibleParams = Object.keys(variables)
-        .filter((key) => typeof variables[key] !== "undefined")
-        .map((key) => `${key}=${encodeURIComponent(variables[key])}`)
-        .join("&");
-      if (possibleParams.length > 0) {
-        params += "?" + possibleParams;
+  const execute = useCallback(
+    async (variables?: QueryVariables): Promise<Response<QueryResult>> => {
+      let params = "";
+      if (variables && Object.keys(variables).length > 0) {
+        const possibleParams = Object.keys(variables)
+          .filter((key) => typeof variables[key] !== "undefined")
+          .map((key) => `${key}=${encodeURIComponent(variables[key])}`)
+          .join("&");
+        if (possibleParams.length > 0) {
+          params += "?" + possibleParams;
+        }
       }
-    }
 
-    const response = await fetch(config.url + url + params);
-    const result = await response.json();
-    return result;
-  };
+      const response = await fetch(config.url + url + params);
+      const result = await response.json();
+      return result;
+    },
+    [config.url]
+  );
 
   /**
    * Different types of api requests should be implemented here.

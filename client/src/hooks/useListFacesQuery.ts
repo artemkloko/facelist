@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ListFacesQueryResult, ListFacesQueryVariables } from "../@types/api";
@@ -18,23 +18,26 @@ export const useListFacesQuery = () => {
   const dispatch = useDispatch<typeof appStateStore.dispatch>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const execute = async (variables?: ListFacesQueryVariables) => {
-    setLoading(true);
-    const result = await apiQuery(variables);
+  const execute = useCallback(
+    async (variables?: ListFacesQueryVariables) => {
+      setLoading(true);
+      const result = await apiQuery(variables);
 
-    if (result.error) {
-      throw new Error(result.error);
-    }
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
-    result.data && dispatch(setFaces({ data: result.data, variables }));
-    setLoading(false);
-  };
+      result.data && dispatch(setFaces({ data: result.data, variables }));
+      setLoading(false);
+    },
+    [setLoading, apiQuery, dispatch, setFaces]
+  );
 
-  const refetch = () => {
+  const refetch = useCallback(() => {
     return execute({ ...facesStore.variables, nextToken: undefined });
-  };
+  }, [execute, facesStore.variables]);
 
-  const fetchMore = async () => {
+  const fetchMore = useCallback(async () => {
     if (!facesStore.data?.nextToken) {
       return;
     }
@@ -52,7 +55,7 @@ export const useListFacesQuery = () => {
 
     result.data && dispatch(appendFaces({ data: result.data, variables }));
     setLoading(false);
-  };
+  }, [facesStore, setLoading, apiQuery]);
 
   const items = useMemo(() => facesStore.data?.items || [], [facesStore]);
 
