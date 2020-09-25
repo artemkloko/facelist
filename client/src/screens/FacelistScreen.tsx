@@ -12,6 +12,8 @@ export const FacelistScreen: React.FC = () => {
 
   useEffect(() => {
     query.execute();
+
+    return () => {};
   }, []);
 
   return (
