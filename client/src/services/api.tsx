@@ -2,23 +2,19 @@ import React, { createContext, useContext } from "react";
 
 import { Response } from "../@types/api";
 
-export type ApiClientConfig = {
-  url: string;
-};
-
 /**
  * context / store
  */
 
-const ApiContext = createContext<{ config?: ApiClientConfig }>({});
+export type ApiContextState = { config: { url: string } };
+
+const ApiContext = createContext<Partial<ApiContextState>>({});
 
 /**
  * provider / initialization
  */
 
-export type ApiProviderProps = {
-  config: ApiClientConfig;
-};
+export type ApiProviderProps = Pick<ApiContextState, "config">;
 
 export const ApiProvider: React.FC<ApiProviderProps> = (props) => {
   /**
@@ -37,41 +33,51 @@ export const ApiProvider: React.FC<ApiProviderProps> = (props) => {
  * hooks
  */
 
+const isApiContextState = (
+  state: Partial<ApiContextState>
+): state is ApiContextState => !!state.config;
+
+export const useApiContext = () => {
+  const context = useContext(ApiContext);
+  if (!isApiContextState(context)) {
+    throw new Error(
+      "ApiContext was not properly initialized. " +
+        "Please make sure to wrap your apiQuery with ApiProvider."
+    );
+  }
+  return context;
+};
+
 export const useApiQuery = <
   QueryResult extends {},
   QueryVariables extends { [key: string]: any }
 >(
   url: string
 ) => {
-  const { config } = useContext(ApiContext);
-
-  if (!config) {
-    throw new Error(
-      "ApiContext was not properly initialized. " +
-        "Please make sure to wrap your apiQuery with ApiProvider."
-    );
-  }
+  const { config } = useApiContext();
 
   const execute = async (
     variables?: QueryVariables
   ): Promise<Response<QueryResult>> => {
     let params = "";
     if (variables && Object.keys(variables).length > 0) {
-      params += "?";
-      params += Object.keys(variables)
+      const possibleParams = Object.keys(variables)
+        .filter((key) => typeof variables[key] !== "undefined")
         .map((key) => `${key}=${encodeURIComponent(variables[key])}`)
         .join("&");
+      if (possibleParams.length > 0) {
+        params += "?" + possibleParams;
+      }
     }
 
-    try {
-      const response = await fetch(config.url + url + params);
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    const response = await fetch(config.url + url + params);
+    const result = await response.json();
+    return result;
   };
+
+  /**
+   * Different types of api requests should be implemented here.
+   */
 
   return execute;
 };

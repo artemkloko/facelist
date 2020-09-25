@@ -31,7 +31,7 @@ export const useListFacesQuery = () => {
   };
 
   const refetch = () => {
-    execute({ ...facesStore.variables, nextToken: undefined });
+    return execute({ ...facesStore.variables, nextToken: undefined });
   };
 
   const fetchMore = async () => {
@@ -45,6 +45,10 @@ export const useListFacesQuery = () => {
       nextToken: facesStore.data.nextToken,
     };
     const result = await apiQuery(variables);
+
+    if (result.error) {
+      throw new Error(result.error);
+    }
 
     result.data && dispatch(appendFaces({ data: result.data, variables }));
     setLoading(false);
